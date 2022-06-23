@@ -13,7 +13,7 @@ type Article struct {
 
 func main() {
 	r := gin.Default()
-	//配置模板的文件
+	//配置模板的文件 如果模板在多级目录里面的话需要这样配置 r.LoadHTMLGlob("templates/**/**/*") /** 表示目录
 	r.LoadHTMLGlob("templates/*")
 
 	r.GET("/", func(c *gin.Context) {
