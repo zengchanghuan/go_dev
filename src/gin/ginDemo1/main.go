@@ -10,7 +10,7 @@ func main() {
 	r := gin.Default()
 	//配置路由
 	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "值:%v", "你好gin")
+		c.String(http.StatusOK, "值:%v", "hello gin web")
 	})
 	r.GET("/news", func(c *gin.Context) {
 		c.String(http.StatusOK, "我是新闻页面 111")
