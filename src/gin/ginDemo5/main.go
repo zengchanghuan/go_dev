@@ -39,38 +39,37 @@ func main() {
 	//配置静态web目录   第一个参数表示路由, 第二个参数表示映射的目录
 	r.Static("/static", "./static")
 
-	//Get 请求传值
-	r.GET("/", func(c *gin.Context) {
-		username := c.Query("username")
-		age := c.Query("age")
-		page := c.DefaultQuery("page", "1")
+	r.GET("/", func(context *gin.Context) {
+		username := context.Query("username")
+		age := context.Query("age")
+		page := context.DefaultQuery("page", "1")
 
-		c.JSON(http.StatusOK, gin.H{
+		context.JSON(http.StatusOK, gin.H{
 			"username": username,
 			"age":      age,
 			"page":     page,
 		})
 	})
 
-	//Get 请求传值   id
-	r.GET("/article", func(c *gin.Context) {
-		id := c.DefaultQuery("id", "1")
-		c.JSON(http.StatusOK, gin.H{
+	r.GET("/article", func(context *gin.Context) {
+		id := context.DefaultQuery("id", "1")
+		context.JSON(http.StatusOK, gin.H{
 			"msg": "新闻详情",
 			"id":  id,
 		})
 	})
-	//post演示
-	r.GET("/user", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "default/user.html", gin.H{})
-	})
-	//获取表单post过来的数据
-	r.POST("/doAddUser1", func(c *gin.Context) {
-		username := c.PostForm("username")
-		password := c.PostForm("password")
-		age := c.DefaultPostForm("age", "20")
 
-		c.JSON(http.StatusOK, gin.H{
+	r.GET("/user", func(context *gin.Context) {
+		context.HTML(http.StatusOK, "default/user.html", gin.H{})
+
+	})
+
+	r.POST("/doAddUser1", func(context *gin.Context) {
+		username := context.PostForm("username")
+		password := context.PostForm("password")
+		age := context.DefaultPostForm("age", "20")
+
+		context.JSON(http.StatusOK, gin.H{
 			"username": username,
 			"password": password,
 			"age":      age,
@@ -78,31 +77,29 @@ func main() {
 	})
 
 	//获取 GET POST 传递的数据绑定到结构体
-
-	//http://localhost:8080/getUser?username=zhangsan&password=1111
-
-	r.GET("/getUser", func(c *gin.Context) {
+	r.GET("/getUser", func(context *gin.Context) {
 		user := &UserInfo{}
-		if err := c.ShouldBind(&user); err == nil {
+		if err := context.ShouldBind(&user); err == nil {
 			fmt.Printf("%#v", user)
-			c.JSON(http.StatusOK, user)
+			context.JSON(http.StatusOK, user)
 		} else {
-			c.JSON(http.StatusOK, gin.H{
+			context.JSON(http.StatusOK, gin.H{
+				"error": err.Error(),
+			})
+		}
+	})
+
+	r.POST("/doAddUser2", func(context *gin.Context) {
+		user := &UserInfo{}
+		if err := context.ShouldBind(&user); err == nil {
+			context.JSON(http.StatusOK, user)
+		} else {
+			context.JSON(http.StatusBadRequest, gin.H{
 				"err": err.Error(),
 			})
 		}
 	})
 
-	r.POST("/doAddUser2", func(c *gin.Context) {
-		user := &UserInfo{}
-		if err := c.ShouldBind(&user); err == nil {
-			c.JSON(http.StatusOK, user)
-		} else {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"err": err.Error(),
-			})
-		}
-	})
 	//获取 Post Xml 数据
 	r.POST("/xml", func(c *gin.Context) {
 		article := &Article{}
@@ -120,21 +117,18 @@ func main() {
 		}
 
 	})
-	// 动态路由传值
-	//  list/123          list/456
 
-	r.GET("/list/:cid", func(c *gin.Context) {
-
-		cid := c.Param("cid")
-		c.String(200, "%v", cid)
-
+	//动态路由传值
+	r.GET("/list/:cid", func(context *gin.Context) {
+		cid := context.Param("cid")
+		context.String(200, "%v", cid)
 	})
 
-	//后台
 	r.GET("/admin", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "admin/index.html", gin.H{
 			"title": "后台首页",
 		})
 	})
-	r.Run()
+
+	r.Run("8080")
 }
