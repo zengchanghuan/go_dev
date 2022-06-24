@@ -21,45 +21,17 @@ func (con UserController) Add(c *gin.Context) {
 func (con UserController) DoUpload(c *gin.Context) {
 	username := c.PostForm("username")
 
-	file, err := c.FormFile("face")
+	form, _ := c.MultipartForm()
+	files := form.File["face[]"]
 
-	// file.Filename 获取文件名称  aaa.jpg   ./static/upload/aaa.jpg
-	dst := path.Join("./static/upload", file.Filename)
-	if err == nil {
+	for _, file := range files {
+		dst := path.Join("./static/upload", file.Filename)
+		// 上传文件至指定目录
 		c.SaveUploadedFile(file, dst)
 	}
-	// c.String(200, "执行上传")
+
 	c.JSON(http.StatusOK, gin.H{
 		"success":  true,
 		"username": username,
-		"dst":      dst,
-	})
-}
-
-func (con UserController) Edit(c *gin.Context) {
-	c.HTML(http.StatusOK, "admin/useredit.html", gin.H{})
-}
-func (con UserController) DoEdit(c *gin.Context) {
-	username := c.PostForm("username")
-
-	face1, err1 := c.FormFile("face1")
-	dst1 := path.Join("./static/upload", face1.Filename)
-	if err1 == nil {
-
-		c.SaveUploadedFile(face1, dst1)
-	}
-
-	face2, err2 := c.FormFile("face2")
-	dst2 := path.Join("./static/upload", face2.Filename)
-	if err2 == nil {
-		c.SaveUploadedFile(face2, dst2)
-	}
-
-	// c.String(200, "执行上传")
-	c.JSON(http.StatusOK, gin.H{
-		"success":  true,
-		"username": username,
-		"dst1":     dst1,
-		"dst2":     dst2,
 	})
 }
