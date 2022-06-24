@@ -6,7 +6,7 @@ import (
 	"html/template"
 
 	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,10 +23,7 @@ func main() {
 	r.Static("/static", "./static")
 
 	//配置session中间件
-
-	// 创建基于 cookie 的存储引擎，secret11111 参数是用于加密的密钥
-	store := cookie.NewStore([]byte("secret111"))
-	//配置session的中间件 store是前面创建的存储引擎，我们可以替换成其他存储引擎
+	store, _ := redis.NewStore(10, "tcp", "localhost:6379", "", []byte("secret111"))
 	r.Use(sessions.Sessions("mysession", store))
 
 	routers.AdminRoutersInit(r)
