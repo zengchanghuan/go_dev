@@ -8,7 +8,7 @@ type Article struct {
 	// ArticleCate ArticleCate `gorm:"foreignKey:CateId"`
 }
 
-// TableName 表示配置操作数据库的表名称
+//表示配置操作数据库的表名称
 func (Article) TableName() string {
 	return "article"
 }
