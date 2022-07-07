@@ -12,7 +12,7 @@ type ArticleController struct {
 }
 
 func (con ArticleController) Index(c *gin.Context) {
-	articleList := []models.Article{}
+	var articleList []models.Article
 
 	models.DB.Find(&articleList)
 
