@@ -125,11 +125,11 @@ func (con NavController) Index(c *gin.Context) {
 	// 	"result": navList,
 	// })
 
-	// navList := []models.Nav{}
-	// models.DB.Order("id desc").Order("sort asc").Limit(2).Find(&navList)
-	// c.JSON(200, gin.H{
-	// 	"result": navList,
-	// })
+	navList := []models.Nav{}
+	models.DB.Order("id desc").Order("sort asc").Limit(2).Find(&navList)
+	c.JSON(200, gin.H{
+		"result": navList,
+	})
 
 	//分页
 	// navList := []models.Nav{}
@@ -174,11 +174,11 @@ func (con NavController) Index(c *gin.Context) {
 
 	//统计 user 表的数量
 
-	var num int
-	models.DB.Raw("select count(1) from user").Scan(&num)
-	c.JSON(200, gin.H{
-		"result": num,
-	})
+	//var num int
+	//models.DB.Raw("select count(1) from user").Scan(&num)
+	//c.JSON(200, gin.H{
+	//	"result": num,
+	//})
 
 	// c.String(200, "Nav Index")
 }

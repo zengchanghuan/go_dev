@@ -4,7 +4,6 @@ import (
 	"gindemo17/models"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type StudentController struct {
@@ -13,26 +12,26 @@ type StudentController struct {
 
 func (con StudentController) Index(c *gin.Context) {
 	//1、获取所有的学生信息
-	// studentList := []models.Student{}
-	// models.DB.Find(&studentList)
-	// c.JSON(200, gin.H{
-	// 	"result": studentList,
-	// })
+	//var studentList []models.Student
+	//models.DB.Find(&studentList)
+	//c.JSON(200, gin.H{
+	//	"result": studentList,
+	//})
 
 	//2、获取所有的课程信息
 
-	// lessonList := []models.Lesson{}
-	// models.DB.Find(&lessonList)
-	// c.JSON(200, gin.H{
-	// 	"result": lessonList,
-	// })
+	//var lessonList []models.Lesson
+	//models.DB.Find(&lessonList)
+	//c.JSON(200, gin.H{
+	//	"result": lessonList,
+	//})
 
 	//3、查询学生信息的时候 展示学生选修的课程
-	// studentList := []models.Student{}
-	// models.DB.Preload("Lesson").Find(&studentList)
-	// c.JSON(200, gin.H{
-	// 	"result": studentList,
-	// })
+	var studentList []models.Student
+	models.DB.Preload("Lesson").Find(&studentList)
+	c.JSON(200, gin.H{
+		"result": studentList,
+	})
 
 	// 4、查询张三 以及张三选修了哪些课程
 
@@ -83,12 +82,12 @@ func (con StudentController) Index(c *gin.Context) {
 	// 9 查看课程被哪些学生选修 要求：学生 id 倒叙输出  自定义预加载 SQL
 	// https://gorm.io/zh_CN/docs/preload.html
 
-	lessonList := []models.Lesson{}
-	models.DB.Preload("Student", func(db *gorm.DB) *gorm.DB {
-		return models.DB.Where("id>2").Order("student.id DESC")
-	}).Find(&lessonList)
-	c.JSON(200, gin.H{
-		"result": lessonList,
-	})
+	//lessonList := []models.Lesson{}
+	//models.DB.Preload("Student", func(db *gorm.DB) *gorm.DB {
+	//	return models.DB.Where("id>2").Order("student.id DESC")
+	//}).Find(&lessonList)
+	//c.JSON(200, gin.H{
+	//	"result": lessonList,
+	//})
 
 }
